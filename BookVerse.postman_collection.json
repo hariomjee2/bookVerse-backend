@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "d23d3a57-b74e-4298-a659-a2e39903ea37",
+		"name": "BookVerse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48639954",
+		"_collection_link": "https://hariomjee2-1677422.postman.co/workspace/04abb67f-c040-4eef-8f50-896564ab5312/collection/48639954-d23d3a57-b74e-4298-a659-a2e39903ea37?action=share&source=collection_link&creator=48639954"
+	},
+	"item": [
+		{
+			"name": "signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"harijee123\",\r\n    \"email\":\"hari.jee.test@example.com\",\r\n    \"password\":\"Str0ngP@ssw0rd!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/auth/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "books",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTQyZDhkZDNkNjFhMmQ0MmNiZTdlYSIsInVzZXJuYW1lIjoiaGFyaWplZTEyMyIsImlhdCI6MTc2MjkzMDA3MiwiZXhwIjoxNzYyOTMzNjcyfQ.h0jZi1slcIpAZ7AI3PyOUCUeigKxqTdRY-c8kRIgVJ8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/books",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "books",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTQyZDhkZDNkNjFhMmQ0MmNiZTdlYSIsInVzZXJuYW1lIjoiaGFyaWplZTEyMyIsImlhdCI6MTc2MjkzMDA3MiwiZXhwIjoxNzYyOTMzNjcyfQ.h0jZi1slcIpAZ7AI3PyOUCUeigKxqTdRY-c8kRIgVJ8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"The Silent Grove\",\r\n  \"author\": \"Elena Hart\",\r\n  \"genre\": \"Programming\",\r\n  \"year\": 2022,\r\n  \"summary\": \"In a quiet village nestled among ancient woods, a journalist uncovers a decades-old secret that links a missing child, a forgotten legend, and the town’s most respected family. As she digs deeper, the silence of the grove begins to whisper truths no one wants revealed.\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/books",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
