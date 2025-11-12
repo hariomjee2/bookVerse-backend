@@ -1,0 +1,166 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "BookVerse API",
+    "version": "1.0.0",
+    "description": "API documentation for BookVerse backend (Auth, Books, Reviews, Votes)"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Same origin (relative)"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "SignupRequest": {
+        "type": "object",
+        "required": ["username", "email", "password"],
+        "properties": {
+          "username": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string" }
+        }
+      },
+      "BookCreate": {
+        "type": "object",
+        "required": ["title", "author", "genre", "year"],
+        "properties": {
+          "title": { "type": "string" },
+          "author": { "type": "string" },
+          "genre": { "type": "string" },
+          "year": { "type": "integer" },
+          "summary": { "type": "string" }
+        }
+      },
+      "Book": {
+        "allOf": [
+          { "$ref": "#/components/schemas/BookCreate" },
+          {
+            "type": "object",
+            "properties": {
+              "_id": { "type": "string" },
+              "createdBy": { "type": "string" }
+            }
+          }
+        ]
+      },
+      "ReviewCreate": {
+        "type": "object",
+        "required": ["bookId", "rating"],
+        "properties": {
+          "bookId": { "type": "string" },
+          "rating": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "comment": { "type": "string" }
+        }
+      },
+      "VoteRequest": {
+        "type": "object",
+        "required": ["vote"],
+        "properties": {
+          "vote": { "type": "string", "enum": ["up", "down"] }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "summary": "Create a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SignupRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created", "content": {"application/json": {"schema": {"$ref":"#/components/schemas/AuthResponse"}}}},
+          "400": { "description": "Validation error", "content": {"application/json": {"schema": {"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Logged in", "content": {"application/json": {"schema": {"$ref":"#/components/schemas/AuthResponse"}}}},
+          "401": { "description": "Unauthorized", "content": {"application/json": {"schema": {"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/api/books": {
+      "post": {
+        "summary": "Create a book",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BookCreate" } } } },
+        "responses": { "201": { "description": "Book created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } }, "400": { "description": "Validation error" } }
+      },
+      "get": {
+        "summary": "List books",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "genre", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "List of books" } }
+      }
+    },
+    "/api/books/{id}": {
+      "get": {
+        "summary": "Get book details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Book details" }, "404": { "description": "Not found" } }
+      }
+    },
+    "/api/reviews": {
+      "post": {
+        "summary": "Add a review",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReviewCreate" } } } },
+        "responses": { "201": { "description": "Review created" }, "409": { "description": "Conflict" }, "404": { "description": "Book not found" } }
+      }
+    },
+    "/api/reviews/{id}/vote": {
+      "patch": {
+        "summary": "Vote on a review",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/VoteRequest" } } } },
+        "responses": { "200": { "description": "Vote recorded" }, "409": { "description": "Already voted" }, "404": { "description": "Review not found" } }
+      }
+    }
+  }
+}

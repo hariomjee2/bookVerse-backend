@@ -9,6 +9,8 @@ import logger from './utils/logger';
 import authRoutes from './routes/authRoutes';
 import bookRoutes from './routes/bookRoutes';
 import reviewRoutes from './routes/reviewRoutes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './docs/swagger.json';
 
 dotenv.config();
 
@@ -25,6 +27,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/reviews', reviewRoutes);
+
+// Swagger UI
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (_req: Request, res: Response) => {
   logger.info('Root endpoint accessed');
